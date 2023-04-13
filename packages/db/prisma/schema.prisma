@@ -1,17 +1,42 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-generator client {
-    provider = "prisma-client-js"
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+    relationMode = "prisma"
 }
 
-datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
+generator client {
+    provider = "prisma-client-js"
 }
 
 model Post {
     id      String @id @default(cuid())
     title   String
     content String
+}
+
+model Branch {
+    id      Int      @id @default(autoincrement()) 
+    name    String
+    // address String
+}
+
+model Status {
+    id      Int      @id @default(autoincrement()) 
+    name    String
+}
+
+model Parcel {
+    id              String @id @default(cuid())
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
+    deliveredAt     DateTime?
+    clientId        String
+    status          String @default("New")
+    shippedFrom     String
+    shippedTo       String
+
+    @@index([clientId])
 }
